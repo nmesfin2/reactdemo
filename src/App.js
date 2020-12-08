@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import Header  from './components/layouts/Header'
 import Landing  from './components/layouts/Landing'
