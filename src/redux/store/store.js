@@ -12,6 +12,7 @@ import rootReducer from '../reducers'
 
 const initialState = {}
 const middleware = [thunk] 
+// thunk is middl ware specification.
 
 const store = createStore(rootReducer, initialState, composeWithDevtools(applyMiddleware(...middleware)))
 

@@ -34,9 +34,9 @@ export default class Register extends Component {
         e.preventDefault();
         console.log('hello from submit');
         console.log(JSON.stringify(this.state));
-        axios.post('http://localhost:9005/api/auth/signup', newUser)
-        .then(res => console.log(JSON.stringify(res)))
-        .catch(err =>console.log(JSON.stringify(err)))
+        // axios.post('http://localhost:9005/api/auth/signup', newUser)
+        // .then(res => console.log(JSON.stringify(res)))
+        // .catch(err =>console.log(JSON.stringify(err)))
         
     }
     render() {
