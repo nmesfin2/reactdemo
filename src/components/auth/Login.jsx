@@ -1,12 +1,12 @@
-import React from 'react'
-import { useState } from 'react'
-import axios from 'axios'
+import React, { Component, useState } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { LOGIN_FAIL } from '../../redux/actions/types'
+import { login } from '../../redux/actions/authAction'
+import { Redirect } from 'react-router-dom'
 
-
-const Login = () => {
-
-    
-
+export const Login = ({login,isAuthenticated}) => {
+  
     //const [data, setterFunction]=useState({initial data})
     const [formData, setFormData] =useState({username:'',password:''})
 
@@ -26,14 +26,19 @@ const Login = () => {
            username: username,
            password: password,
          };
-         axios
-           .post("http://localhost:9005/api/auth/signin", loginUser)
-           .then((response) => {console.log(response.data)
-                 localStorage.setItem("data", JSON.stringify(response.data));
+        //  axios
+        //    .post("http://localhost:9005/api/auth/signin", loginUser)
+        //    .then((response) => {console.log(response.data)
+        // localStorage.setItem("data", JSON.stringify(response.data));
+        login(username,password)
           
-        })
-        .catch((err) => console.log(err));
+        
+        // .catch((err) => console.log(err));
     };
+
+    if(isAuthenticated){
+      return <Redirect to='/dashboard'></Redirect>
+    }
 
     return (
         <div className="login">
@@ -76,6 +81,20 @@ const Login = () => {
         </div>
       </div>
     )
+
 }
 
-export default Login;
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticated:state.auth.isAuthenticated
+})
+
+const mapDispatchToProps = {
+  
+}
+
+export default connect(mapStateToProps, {login})(Login)

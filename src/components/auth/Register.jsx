@@ -1,65 +1,62 @@
-import axios from 'axios';
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
+import {Redirect} from 'react-router-dom'
 
-export default class Register extends Component {
-    constructor() {
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import {registerUser} from '../../redux/actions/authAction'
+ const Register = ({registerUser,isAuthenticated}) => {
+  const [formData,setFormData] = useState({username : '',
+email:'',
+password:'',
+password2:''})
+const {username,email,password,password2} = formData;
+const onChange=(e) =>{
 
-        super();
-        this.state  = {
-            email:'',
-            username :'',
-            password:'',
-            password2:'',
-            role:'',
-            errors:{}
-        };
-        this.onChange=this.onChange.bind(this);
-        // we will bind this object with ur event
-        this.onSubmit = this.onSubmit.bind(this);
-    }
+ setFormData({...formData,[e.target.name]:e.target.value})
+  //when state of ur controller is changing then we are holding that changed value in state.
+}
+const onSubmit =(e)=>{
+  e.preventDefault();
+  const newUser = {
+    username : username,
+    email:email,
+    password:password,
+    role:['user']
+};
 
-    onChange(e) {
+console.log('hello from submit');
+console.log(JSON.stringify(formData));
+if(password!== password2) {
+  console.log('problem')
+}
+else{
+  // action 
+  console.log('hello from register component'+JSON.stringify(formData))
+  registerUser(formData)
+}
 
-        this.setState({[e.target.name]:e.target.value});
-        //when state of ur controller is changing then we are holding that changed value in state.
-    }
-    onSubmit(e) {
+};
 
-        const newUser = {
-            username : this.state.username,
-            email : this.state.email,
-            password : this.state.password,
-            role : ['user']
-        }
-        e.preventDefault();
-        console.log('hello from submit');
-        console.log(JSON.stringify(this.state));
-        // axios.post('http://localhost:9005/api/auth/signup', newUser)
-        // .then(res => console.log(JSON.stringify(res)))
-        // .catch(err =>console.log(JSON.stringify(err)))
-        
-    }
-    render() {
-        return (
-            <div className="register">
+  return (
+    <div className="register">
             <div className="container">
               <div className="row">
                 <div className="col-md-8 m-auto">
                   <h1 className="display-4 text-center">Sign Up</h1>
                   <p className="lead text-center">Create your DevConnector account</p>
-                  <form onSubmit={this.onSubmit}>
+                  <form onSubmit={onSubmit}>
                     <div className="form-group">
-                      <input type="text" className="form-control form-control-lg" placeholder="Name" name="username" required  value={this.state.username} onChange={this.onChange} />
+                      <input type="text" className="form-control form-control-lg" placeholder="Name" name="username" required  value={username} onChange={onChange} />
                     </div>
                     <div className="form-group">
-                      <input type="email" className="form-control form-control-lg" placeholder="Email Address" name="email" value={this.state.email} onChange={this.onChange}/>
+                      <input type="email" className="form-control form-control-lg" placeholder="Email Address" name="email" value={email} onChange={onChange}/>
                       <small className="form-text text-muted">This site uses Gravatar so if you want a profile image, use a Gravatar email</small>
                     </div>
                     <div className="form-group">
-                      <input type="password" className="form-control form-control-lg" placeholder="Password" name="password"  value={this.state.password} onChange={this.onChange}/>
+                      <input type="password" className="form-control form-control-lg" placeholder="Password" name="password"  value={password} onChange={onChange}/>
                     </div>
                     <div className="form-group">
-                      <input type="password" className="form-control form-control-lg" placeholder="Confirm Password" name="password2" value={this.state.password2} onChange={this.onChange} />
+                      <input type="password" className="form-control form-control-lg" placeholder="Confirm Password" name="password2" value={password2} onChange={onChange} />
                     </div>
                     <input type="submit" className="btn btn-info btn-block mt-4" />
                   </form>
@@ -67,9 +64,21 @@ export default class Register extends Component {
               </div>
             </div>
           </div>
-        
-        
-        )
-    }
-    
+  )
 }
+
+Register.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  registerUser:PropTypes.func.isRequired
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticated : state.auth.isAuthenticated
+  
+})
+
+const mapDispatchToProps = {
+  
+}
+
+export default connect(mapStateToProps, {registerUser})(Register)
